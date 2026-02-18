@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Clock\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

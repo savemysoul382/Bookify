@@ -39,5 +39,7 @@ public class ApartmentConfiguration : IEntityTypeConfiguration<Apartment>
                 priceBuilder.Property(p => p.Currency)
                     .HasConversion(currency => currency.Code, code => Currency.FromCode(code));
             });
+
+        builder.Property<uint>("Version").IsRowVersion();
     }
 }
