@@ -10,7 +10,7 @@ internal sealed class PermissionAuthorizationPolicyProvider : DefaultAuthorizati
     public PermissionAuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
         : base(options)
     {
-        this._authorizationOptions = options.Value;
+        _authorizationOptions = options.Value;
     }
 
     public override async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
@@ -26,7 +26,7 @@ internal sealed class PermissionAuthorizationPolicyProvider : DefaultAuthorizati
             .AddRequirements(new PermissionRequirement(policyName))
             .Build();
 
-        this._authorizationOptions.AddPolicy(policyName, permissionPolicy);
+        _authorizationOptions.AddPolicy(policyName, permissionPolicy);
 
         return permissionPolicy;
     }

@@ -80,7 +80,7 @@ public static class DependencyInjection
     private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("Database") ?? throw new InvalidOperationException("Connection string not found.");
-        services.AddDbContext<ApplicationDbContext>(options => { options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention(); });
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IApartmentRepository, ApartmentRepository>();

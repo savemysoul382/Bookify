@@ -17,7 +17,7 @@ public class UsersController : ControllerBase
 
     public UsersController(ISender sender)
     {
-        this._sender = sender;
+        _sender = sender;
     }
 
     [HttpGet("me")]
@@ -26,7 +26,7 @@ public class UsersController : ControllerBase
     //[Authorize(Policy = Permissions.UsersRead)]
     public async Task<IActionResult> GetLoggedInUser(CancellationToken cancellationToken)
     {
-        GetLoggedInUserQuery query = new GetLoggedInUserQuery();
+        var query = new GetLoggedInUserQuery();
 
         Result<UserResponse> result = await _sender.Send(query, cancellationToken);
 
@@ -39,13 +39,13 @@ public class UsersController : ControllerBase
         RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
-        RegisterUserCommand command = new RegisterUserCommand(
+        var command = new RegisterUserCommand(
             request.Email,
             request.FirstName,
             request.LastName,
             request.Password);
 
-        Result<Guid> result = await this._sender.Send(command, cancellationToken);
+        Result<Guid> result = await _sender.Send(command, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -59,9 +59,9 @@ public class UsersController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> LogIn(LogInUserRequest request, CancellationToken cancellationToken)
     {
-        LogInUserCommand command = new LogInUserCommand(request.Email, request.Password);
+        var command = new LogInUserCommand(request.Email, request.Password);
 
-        Result<AccessTokenResponse> result = await this._sender.Send(command, cancellationToken);
+        Result<AccessTokenResponse> result = await _sender.Send(command, cancellationToken);
 
         if (result.IsFailure)
         {

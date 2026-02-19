@@ -10,7 +10,7 @@ internal sealed class PermissionAuthorizationHandler : AuthorizationHandler<Perm
 
     public PermissionAuthorizationHandler(IServiceProvider serviceProvider)
     {
-        this._serviceProvider = serviceProvider;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
@@ -20,7 +20,7 @@ internal sealed class PermissionAuthorizationHandler : AuthorizationHandler<Perm
             return;
         }
 
-        using IServiceScope scope = this._serviceProvider.CreateScope();
+        using IServiceScope scope = _serviceProvider.CreateScope();
 
         AuthorizationService authorizationService = scope.ServiceProvider.GetRequiredService<AuthorizationService>();
 

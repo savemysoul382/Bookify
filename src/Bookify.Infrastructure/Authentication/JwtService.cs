@@ -17,8 +17,8 @@ internal sealed class JwtService : IJwtService
 
     public JwtService(HttpClient httpClient, IOptions<KeycloakOptions> keycloakOptions)
     {
-        this._httpClient = httpClient;
-        this._keycloakOptions = keycloakOptions.Value;
+        _httpClient = httpClient;
+        _keycloakOptions = keycloakOptions.Value;
     }
 
     public async Task<Result<string>> GetAccessTokenAsync(
@@ -28,23 +28,23 @@ internal sealed class JwtService : IJwtService
     {
         try
         {
-            KeyValuePair<string, string>[] authRequestParameters = new KeyValuePair<string, string>[]
+            var authRequestParameters = new KeyValuePair<string, string>[]
             {
-                new("client_id", this._keycloakOptions.AuthClientId),
-                new("client_secret", this._keycloakOptions.AuthClientSecret),
+                new("client_id", _keycloakOptions.AuthClientId),
+                new("client_secret", _keycloakOptions.AuthClientSecret),
                 new("scope", "openid email"),
                 new("grant_type", "password"),
                 new("username", email),
                 new("password", password)
             };
 
-            FormUrlEncodedContent authorizationRequestContent = new FormUrlEncodedContent(authRequestParameters);
+            using var authorizationRequestContent = new FormUrlEncodedContent(authRequestParameters);
 
-            HttpResponseMessage response = await this._httpClient.PostAsync("", authorizationRequestContent, cancellationToken);
+            HttpResponseMessage response = await _httpClient.PostAsync("", authorizationRequestContent, cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
-            AuthorizationToken? authorizationToken = await response.Content.ReadFromJsonAsync<AuthorizationToken>();
+            AuthorizationToken? authorizationToken = await response.Content.ReadFromJsonAsync<AuthorizationToken>(cancellationToken: cancellationToken);
 
             if (authorizationToken is null)
             {

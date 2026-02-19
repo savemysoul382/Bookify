@@ -17,6 +17,6 @@ internal sealed class UserRepository : Repository<User>, IUserRepository
             DbContext.Attach(role);
         }
 
-        this.DbContext.Add(user);
+        DbContext.Add(user);
     }
 }

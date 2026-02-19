@@ -19,42 +19,42 @@ internal sealed class AddReviewCommandHandler : ICommandHandler<AddReviewCommand
         IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider)
     {
-        this._bookingRepository = bookingRepository;
-        this._reviewRepository = reviewRepository;
-        this._unitOfWork = unitOfWork;
-        this._dateTimeProvider = dateTimeProvider;
+        _bookingRepository = bookingRepository;
+        _reviewRepository = reviewRepository;
+        _unitOfWork = unitOfWork;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Result> Handle(AddReviewCommand request, CancellationToken cancellationToken)
     {
-        var booking = await this._bookingRepository.GetByIdAsync(request.BookingId, cancellationToken);
+        Booking? booking = await _bookingRepository.GetByIdAsync(request.BookingId, cancellationToken);
 
         if (booking is null)
         {
             return Result.Failure(BookingErrors.NotFound);
         }
 
-        var ratingResult = Rating.Create(request.Rating);
+        Result<Rating> ratingResult = Rating.Create(request.Rating);
 
         if (ratingResult.IsFailure)
         {
             return Result.Failure(ratingResult.Error);
         }
 
-        var reviewResult = Review.Create(
+        Result<Review> reviewResult = Review.Create(
             booking,
             ratingResult.Value,
             new Comment(request.Comment),
-            this._dateTimeProvider.UtcNow);
+            _dateTimeProvider.UtcNow);
 
         if (reviewResult.IsFailure)
         {
             return Result.Failure(reviewResult.Error);
         }
 
-        this._reviewRepository.Add(reviewResult.Value);
+        _reviewRepository.Add(reviewResult.Value);
 
-        await this._unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
