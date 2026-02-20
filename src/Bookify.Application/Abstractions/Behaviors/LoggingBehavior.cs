@@ -7,7 +7,7 @@ using Serilog.Context;
 
 #pragma warning disable CA1873
 
-namespace Bookify.Application.Abstractions.Behavior;
+namespace Bookify.Application.Abstractions.Behaviors;
 
 public class LoggingBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>

@@ -18,13 +18,13 @@ internal sealed class GetBookingQueryHandler : IQueryHandler<GetBookingQuery, Bo
 
     public GetBookingQueryHandler(ISqlConnectionFactory connectionFactory, IUserContext userContext)
     {
-        _connectionFactory = connectionFactory;
-        _userContext = userContext;
+        this._connectionFactory = connectionFactory;
+        this._userContext = userContext;
     }
 
     public async Task<Result<BookingResponse>> Handle(GetBookingQuery request, CancellationToken cancellationToken)
     {
-        using IDbConnection connection = _connectionFactory.CreateConnection();
+        using IDbConnection connection = this._connectionFactory.CreateConnection();
         const string sql = """
                            SELECT
                                id AS Id,
@@ -53,7 +53,7 @@ internal sealed class GetBookingQueryHandler : IQueryHandler<GetBookingQuery, Bo
                 BookingId = request.BookingId
             });
 
-        if (booking is null || booking.UserId != _userContext.UserId) // resource based authorization
+        if (booking is null || booking.UserId != this._userContext.UserId) // resource based authorization
         {
             return Result.Failure<BookingResponse>(BookingErrors.NotFound);
         }

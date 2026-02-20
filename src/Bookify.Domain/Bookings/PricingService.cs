@@ -31,7 +31,7 @@ public class PricingService
             amenitiesUpCharge = new Money(priceForPeriod.Amount * percentageUpCharge, currency);
         }
 
-        Money totalPrice = Money.Zero();
+        Money totalPrice = Money.Zero(currency);
 
         totalPrice += priceForPeriod;
 

@@ -1,4 +1,5 @@
-﻿using Bookify.Domain.Users;
+﻿using Bookify.Application.Abstractions.Caching;
+using Bookify.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookify.Infrastructure.Authorization;
@@ -6,15 +7,25 @@ namespace Bookify.Infrastructure.Authorization;
 internal sealed class AuthorizationService
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly ICacheService _cacheService;
 
-    public AuthorizationService(ApplicationDbContext dbContext)
+    public AuthorizationService(ApplicationDbContext dbContext, ICacheService cacheService)
     {
-        _dbContext = dbContext;
+        this._dbContext = dbContext;
+        this._cacheService = cacheService;
     }
 
     public async Task<UserRolesResponse> GetRolesForUserAsync(string identityId)
     {
-        UserRolesResponse roles = await _dbContext.Set<User>()
+        string cacheKey = $"auth:roles-{identityId}";
+
+        UserRolesResponse? cachedRoles = await this._cacheService.GetAsync<UserRolesResponse>(cacheKey);
+        if (cachedRoles != null)
+        {
+            return cachedRoles;
+        }
+
+        UserRolesResponse roles = await this._dbContext.Set<User>()
             .Where(u => u.IdentityId == identityId)
             .Select(u => new UserRolesResponse
             {
@@ -23,16 +34,30 @@ internal sealed class AuthorizationService
             })
             .FirstAsync();
 
+        await this._cacheService.SetAsync(cacheKey, roles);
+
         return roles;
     }
 
     public async Task<HashSet<string>> GetPermissionsForUserAsync(string identityId)
     {
-        ICollection<Permission> permissions = await _dbContext.Set<User>()
+        string cacheKey = $"auth:permissions-{identityId}";
+
+        HashSet<string>? cachedPermissions = await this._cacheService.GetAsync<HashSet<string>>(cacheKey);
+        if (cachedPermissions != null)
+        {
+            return cachedPermissions;
+        }
+
+        ICollection<Permission> permissions = await this._dbContext.Set<User>()
             .Where(u => u.IdentityId == identityId)
             .SelectMany(u => u.Roles.Select(r => r.Permissions))
             .FirstAsync();
 
-        return permissions.Select(p => p.Name).ToHashSet();
+        HashSet<string> permissionsSet = permissions.Select(p => p.Name).ToHashSet();
+
+        await this._cacheService.SetAsync(cacheKey, permissionsSet);
+
+        return permissionsSet;
     }
 }

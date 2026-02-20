@@ -1,10 +1,13 @@
-﻿namespace Bookify.Domain.Users;
+﻿using System.Text.Json.Serialization;
+
+namespace Bookify.Domain.Users;
 
 public sealed class Permission
 {
     public static readonly Permission UsersRead = new(1, "users:read");
+    
 
-    private Permission(int id, string name)
+    public Permission(int id, string name)
     {
         Id = id;
         Name = name;

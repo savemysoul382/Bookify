@@ -6,7 +6,7 @@ using FluentValidation;
 using MediatR;
 using ValidationException = Bookify.Application.Exceptions.ValidationException;
 
-namespace Bookify.Application.Abstractions.Behavior;
+namespace Bookify.Application.Abstractions.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>

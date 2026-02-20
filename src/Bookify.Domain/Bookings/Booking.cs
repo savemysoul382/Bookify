@@ -1,5 +1,6 @@
 ﻿// Bookify.Domain
 
+using System.Text.Json.Serialization;
 using Bookify.Domain.Abstractions;
 using Bookify.Domain.Apartments;
 using Bookify.Domain.Bookings.Events;
@@ -23,6 +24,7 @@ public sealed class Booking : Entity
     }
 
     //EF Core
+    [JsonConstructor]
     private Booking()
     {
 
