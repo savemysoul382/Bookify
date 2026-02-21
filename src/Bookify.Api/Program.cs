@@ -1,6 +1,9 @@
+using Bookify.Api;
 using Bookify.Api.Extensions;
 using Bookify.Application;
 using Bookify.Infrastructure;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -27,10 +30,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookify API v1"); 
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookify API v1");
         // c.RoutePrefix = "swagger";
-
     });
 
     app.ApplyMigrations();
@@ -52,4 +53,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapHealthChecks("health", new HealthCheckOptions()
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
 app.Run();
+
