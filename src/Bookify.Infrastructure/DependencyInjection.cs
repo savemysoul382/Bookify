@@ -1,5 +1,6 @@
 ﻿// Bookify.Infrastructure
 
+using Asp.Versioning;
 using Bookify.Application.Abstractions.Authentication;
 using Bookify.Application.Abstractions.Caching;
 using Bookify.Application.Abstractions.Clock;
@@ -47,6 +48,8 @@ public static class DependencyInjection
         AddCaching(services, configuration);
 
         AddHealthChecks(services, configuration);
+
+        AddApiVersioning(services);
 
         return services;
     }
@@ -127,5 +130,28 @@ public static class DependencyInjection
             .AddNpgSql(configuration.GetConnectionString("Database")!)
             .AddRedis(configuration.GetConnectionString("Cache")!)
             .AddUrlGroup(new Uri(configuration["KeyCloak:BaseUrl"]!), HttpMethod.Get, "Keycloak");
+    }
+
+    private static void AddApiVersioning(IServiceCollection services)
+    {
+        services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1);
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+
+                //options.ApiVersionReader = ApiVersionReader.Combine(
+                //    new HeaderApiVersionReader("X-Version-Id"),
+                //    new UrlSegmentApiVersionReader()); Combined version reader that reads from both header and url, with header taking precedence over url if both are present
+
+                //options.ApiVersionReader = new QueryStringApiVersionReader(); if you want to read version from query string instead of url, e.g. /api/endpoint?api-version=1
+                //options.ApiVersionReader = new HeaderApiVersionReader("X-Version-Id"); if you want to read version from header instead of url
+            })
+            .AddMvc()
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V";
+                options.SubstituteApiVersionInUrl = true;
+            });
     }
 }

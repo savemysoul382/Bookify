@@ -1,4 +1,5 @@
-﻿using Bookify.Application.Users.GetLoggedInUser;
+﻿using Asp.Versioning;
+using Bookify.Application.Users.GetLoggedInUser;
 using Bookify.Application.Users.LogInUser;
 using Bookify.Application.Users.RegisterUser;
 using Bookify.Domain.Abstractions;
@@ -10,14 +11,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookify.Api.Controllers.Users;
 
 [ApiController]
-[Route("api/users")]
+//[ApiVersion(ApiVersions.V1, Deprecated = true)] if you want to deprecate v1
+//[ApiVersion(ApiVersions.V2)]
+[ApiVersion(ApiVersions.V1)]
+[Route("api/v{version:apiVersion}/users")]
 public class UsersController : ControllerBase
 {
     private readonly ISender _sender;
 
     public UsersController(ISender sender)
     {
-        _sender = sender;
+        this._sender = sender;
     }
 
     [HttpGet("me")]
@@ -26,9 +30,9 @@ public class UsersController : ControllerBase
     //[Authorize(Policy = Permissions.UsersRead)]
     public async Task<IActionResult> GetLoggedInUser(CancellationToken cancellationToken)
     {
-        var query = new GetLoggedInUserQuery();
+        GetLoggedInUserQuery query = new GetLoggedInUserQuery();
 
-        Result<UserResponse> result = await _sender.Send(query, cancellationToken);
+        Result<UserResponse> result = await this._sender.Send(query, cancellationToken);
 
         return Ok(result.Value);
     }
@@ -39,13 +43,13 @@ public class UsersController : ControllerBase
         RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
-        var command = new RegisterUserCommand(
+        RegisterUserCommand command = new RegisterUserCommand(
             request.Email,
             request.FirstName,
             request.LastName,
             request.Password);
 
-        Result<Guid> result = await _sender.Send(command, cancellationToken);
+        Result<Guid> result = await this._sender.Send(command, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -59,9 +63,9 @@ public class UsersController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> LogIn(LogInUserRequest request, CancellationToken cancellationToken)
     {
-        var command = new LogInUserCommand(request.Email, request.Password);
+        LogInUserCommand command = new LogInUserCommand(request.Email, request.Password);
 
-        Result<AccessTokenResponse> result = await _sender.Send(command, cancellationToken);
+        Result<AccessTokenResponse> result = await this._sender.Send(command, cancellationToken);
 
         if (result.IsFailure)
         {
