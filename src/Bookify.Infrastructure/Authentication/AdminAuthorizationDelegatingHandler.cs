@@ -12,7 +12,7 @@ public sealed class AdminAuthorizationDelegatingHandler : DelegatingHandler
 
     public AdminAuthorizationDelegatingHandler(IOptions<KeycloakOptions> keycloakOptions)
     {
-        _keycloakOptions = keycloakOptions.Value;
+        this._keycloakOptions = keycloakOptions.Value;
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(
@@ -36,8 +36,8 @@ public sealed class AdminAuthorizationDelegatingHandler : DelegatingHandler
     {
         var authorizationRequestParameters = new KeyValuePair<string, string>[]
         {
-            new("client_id", _keycloakOptions.AdminClientId),
-            new("client_secret", _keycloakOptions.AdminClientSecret),
+            new("client_id", this._keycloakOptions.AdminClientId),
+            new("client_secret", this._keycloakOptions.AdminClientSecret),
             new("scope", "openid email"),
             new("grant_type", "client_credentials")
         };
@@ -46,7 +46,7 @@ public sealed class AdminAuthorizationDelegatingHandler : DelegatingHandler
 
         using var authorizationRequest = new HttpRequestMessage(
             HttpMethod.Post,
-            new Uri(_keycloakOptions.TokenUrl))
+            new Uri(this._keycloakOptions.TokenUrl))
         {
             Content = authorizationRequestContent
         };

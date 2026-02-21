@@ -38,7 +38,7 @@ if (app.Environment.IsDevelopment())
 
         foreach (ApiVersionDescription description in descriptions)
         {
-            var url = $"/swagger/{description.GroupName}/swagger.json";
+            string url = $"/swagger/{description.GroupName}/swagger.json";
             string name = description.GroupName.ToUpperInvariant();
             options.SwaggerEndpoint(url, name);
         }
