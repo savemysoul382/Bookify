@@ -66,15 +66,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-ApiVersionSet apiVersionSet = app.NewApiVersionSet()
-    .HasApiVersion(new ApiVersion(1))
-    .ReportApiVersions()
-    .Build();
-
-RouteGroupBuilder routeBuilder = app.MapGroup("api/v{version:apiVersion}").WithApiVersionSet(apiVersionSet);
-
-routeBuilder.MapBookingEndpoints();
-
 app.MapHealthChecks(
     "health",
     new HealthCheckOptions()

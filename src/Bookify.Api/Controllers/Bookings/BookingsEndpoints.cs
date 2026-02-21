@@ -1,37 +1,41 @@
-﻿using Bookify.Application.Bookings.GetBooking;
+﻿using Asp.Versioning;
+using Bookify.Application.Bookings.GetBooking;
 using Bookify.Application.Bookings.ReserveBooking;
 using Bookify.Domain.Abstractions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bookify.Api.Controllers.Bookings
 {
-    public static class BookingsEndpoints
+    [Authorize]
+    [ApiController]
+    [ApiVersion(ApiVersions.V1)]
+    [Route("api/v{version:apiVersion}/bookings")]
+    public class BookingsController : ControllerBase
     {
-        public static IEndpointRouteBuilder MapBookingEndpoints(this IEndpointRouteBuilder builder)
-        {
-            builder.MapGet("bookings/{id}", GetBooking)
-                .RequireAuthorization() // RequireAuthorization("bookings:read")?
-                .WithName(nameof(GetBooking));
+        private readonly ISender _sender;
 
-            builder.MapPost("bookings", ReserveBooking)
-                .RequireAuthorization(); // RequireAuthorization("bookings:write")?
-            return builder;
+        public BookingsController(ISender sender)
+        {
+            this._sender = sender;
         }
 
-
-        public static async Task<IResult> GetBooking(Guid id, ISender sender, CancellationToken cancellationToken)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetBooking(Guid id, CancellationToken cancellationToken)
         {
             GetBookingQuery query = new GetBookingQuery(id);
 
-            Result<BookingResponse> result = await sender.Send(query, cancellationToken);
+            Result<BookingResponse> result = await this._sender.Send(query, cancellationToken);
+
             return result.IsSuccess
-                ? Results.Ok(result.Value)
-                : Results.NotFound();
+                ? this.Ok(result.Value)
+                : this.NotFound();
         }
 
-        public static async Task<IResult> ReserveBooking(
+        [HttpPost]
+        public async Task<IActionResult> ReserveBooking(
             ReserveBookingRequest request,
-            ISender sender,
             CancellationToken cancellationToken)
         {
             ReserveBookingCommand command = new ReserveBookingCommand(
@@ -40,15 +44,14 @@ namespace Bookify.Api.Controllers.Bookings
                 request.StartDate,
                 request.EndDate);
 
-            Result<Guid> result = await sender.Send(command, cancellationToken);
+            Result<Guid> result = await _sender.Send(command, cancellationToken);
 
             if (result.IsFailure)
             {
-                return Results.BadRequest(result.Error);
+                return BadRequest(result.Error);
             }
 
-            //return CreatedAtAction(nameof(GetBooking), new {id = result.Value}, result.Value); this for Controller
-            return Results.CreatedAtRoute(nameof(GetBooking), new {id = result.Value}, result.Value);
+            return CreatedAtAction(nameof(GetBooking), new { id = result.Value }, result.Value);
         }
     }
 }
