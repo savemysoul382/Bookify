@@ -10,7 +10,6 @@ using Bookify.Domain.Users;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Xunit;
 
 namespace Bookify.Application.UnitTests.Bookings;
 

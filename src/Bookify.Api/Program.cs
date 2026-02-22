@@ -1,7 +1,4 @@
-using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
-using Asp.Versioning.Builder;
-using Bookify.Api.Controllers.Bookings;
 using Bookify.Api.Extensions;
 using Bookify.Api.OpenApi;
 using Bookify.Application;
@@ -74,3 +71,7 @@ app.MapHealthChecks(
     });
 
 app.Run();
+
+public partial class Program
+{
+}
