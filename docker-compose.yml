@@ -8,8 +8,8 @@ services:
       context: .
       dockerfile: src/Bookify.Api/Dockerfile
     depends_on:
-      - bookify-db    
-
+      - bookify-db  
+    
   bookify-db:
     image: postgres:15.3-alpine
     container_name: Bookify.Db

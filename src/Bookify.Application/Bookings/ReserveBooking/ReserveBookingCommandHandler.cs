@@ -23,15 +23,15 @@ internal sealed class ReserveBookingCommandHandler : ICommandHandler<ReserveBook
         IApartmentRepository apartmentRepository,
         IBookingRepository bookingRepository,
         IUnitOfWork unitOfWork,
-        IDateTimeProvider dateTimeProvider,
-        PricingService pricingService)
+        PricingService pricingService,
+        IDateTimeProvider dateTimeProvider)
     {
         this._userRepository = userRepository;
         this._apartmentRepository = apartmentRepository;
         this._bookingRepository = bookingRepository;
         this._unitOfWork = unitOfWork;
-        this._dateTimeProvider = dateTimeProvider;
         this._pricingService = pricingService;
+        this._dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Result<Guid>> Handle(ReserveBookingCommand request, CancellationToken cancellationToken)
