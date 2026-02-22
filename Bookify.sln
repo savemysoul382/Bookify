@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.Application.UnitTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.Application.IntegrationTests", "test\Bookify.Application.IntegrationTests\Bookify.Application.IntegrationTests.csproj", "{EB32BBF1-A195-4513-BCCA-AE076F5970CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.Api.FunctionalTests", "test\Bookify.Api.FunctionalTests\Bookify.Api.FunctionalTests.csproj", "{A62E6AC7-BA52-4482-9F11-9FF879C64AEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.ArchitectureTests", "test\Bookify.ArchitectureTests\Bookify.ArchitectureTests.csproj", "{1870E5C6-C4BB-49C7-B0AB-2F066939EB8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{EB32BBF1-A195-4513-BCCA-AE076F5970CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB32BBF1-A195-4513-BCCA-AE076F5970CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB32BBF1-A195-4513-BCCA-AE076F5970CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A62E6AC7-BA52-4482-9F11-9FF879C64AEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A62E6AC7-BA52-4482-9F11-9FF879C64AEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A62E6AC7-BA52-4482-9F11-9FF879C64AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A62E6AC7-BA52-4482-9F11-9FF879C64AEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1870E5C6-C4BB-49C7-B0AB-2F066939EB8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1870E5C6-C4BB-49C7-B0AB-2F066939EB8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1870E5C6-C4BB-49C7-B0AB-2F066939EB8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1870E5C6-C4BB-49C7-B0AB-2F066939EB8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +87,8 @@ Global
 		{BE8AE972-3108-47A9-B3AF-C28F1EAEE99D} = {0D5B5241-8DB8-44B6-BF03-46E5E21BC68C}
 		{3ECB8E64-9FA5-48AD-9BA9-26DEDE93A84B} = {0D5B5241-8DB8-44B6-BF03-46E5E21BC68C}
 		{EB32BBF1-A195-4513-BCCA-AE076F5970CD} = {0D5B5241-8DB8-44B6-BF03-46E5E21BC68C}
+		{A62E6AC7-BA52-4482-9F11-9FF879C64AEB} = {0D5B5241-8DB8-44B6-BF03-46E5E21BC68C}
+		{1870E5C6-C4BB-49C7-B0AB-2F066939EB8A} = {0D5B5241-8DB8-44B6-BF03-46E5E21BC68C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {95BF61AF-5A30-46EF-8E59-3280497CA780}

@@ -45,7 +45,7 @@ internal sealed class ProcessOutboxMessagesJob : IJob
 
         using IDbConnection connection = this._sqlConnectionFactory.CreateConnection();
         using IDbTransaction transaction = connection.BeginTransaction();
-
+        
         IReadOnlyList<OutboxMessageResponse> outboxMessages = await GetOutboxMessagesAsync(connection, transaction);
 
         foreach (OutboxMessageResponse outboxMessage in outboxMessages)
